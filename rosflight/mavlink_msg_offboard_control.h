@@ -8,12 +8,13 @@ typedef struct __mavlink_offboard_control_t
  float y; /*< y control channel, interpreted according to mode*/
  float z; /*< z control channel, interpreted according to mode*/
  float F; /*< F control channel, interpreted according to mode*/
+ float bomb_drop; /*< bomb_drop control channel, interpreted according to mode*/
  uint8_t mode; /*< Offboard control mode, see OFFBOARD_CONTROL_MODE*/
  uint8_t ignore; /*< Bitfield specifying which fields should be ignored, see OFFBOARD_CONTROL_IGNORE*/
 } mavlink_offboard_control_t;
 
-#define MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN 18
-#define MAVLINK_MSG_ID_180_LEN 18
+#define MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN 22
+#define MAVLINK_MSG_ID_180_LEN 22
 
 #define MAVLINK_MSG_ID_OFFBOARD_CONTROL_CRC 93
 #define MAVLINK_MSG_ID_180_CRC 93
@@ -27,8 +28,9 @@ typedef struct __mavlink_offboard_control_t
          { "y", NULL, MAVLINK_TYPE_FLOAT, 0, 4, offsetof(mavlink_offboard_control_t, y) }, \
          { "z", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_offboard_control_t, z) }, \
          { "F", NULL, MAVLINK_TYPE_FLOAT, 0, 12, offsetof(mavlink_offboard_control_t, F) }, \
-         { "mode", NULL, MAVLINK_TYPE_UINT8_T, 0, 16, offsetof(mavlink_offboard_control_t, mode) }, \
-         { "ignore", NULL, MAVLINK_TYPE_UINT8_T, 0, 17, offsetof(mavlink_offboard_control_t, ignore) }, \
+		 { "bomb_drop", NULL, MAVLINK_TYPE_FLOAT, 0, 16, offsetof(mavlink_offboard_control_t, bomb_drop) }, \
+         { "mode", NULL, MAVLINK_TYPE_UINT8_T, 0, 20, offsetof(mavlink_offboard_control_t, mode) }, \
+         { "ignore", NULL, MAVLINK_TYPE_UINT8_T, 0, 21, offsetof(mavlink_offboard_control_t, ignore) }, \
          } \
 }
 
@@ -48,7 +50,7 @@ typedef struct __mavlink_offboard_control_t
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_offboard_control_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-						       uint8_t mode, uint8_t ignore, float x, float y, float z, float F)
+						       uint8_t mode, uint8_t ignore, float x, float y, float z, float F, float bomb_drop)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN];
@@ -66,6 +68,7 @@ static inline uint16_t mavlink_msg_offboard_control_pack(uint8_t system_id, uint
 	packet.y = y;
 	packet.z = z;
 	packet.F = F;
+	packet.bomb_drop = bomb_drop;
 	packet.mode = mode;
 	packet.ignore = ignore;
 
@@ -96,7 +99,7 @@ static inline uint16_t mavlink_msg_offboard_control_pack(uint8_t system_id, uint
  */
 static inline uint16_t mavlink_msg_offboard_control_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
 							   mavlink_message_t* msg,
-						           uint8_t mode,uint8_t ignore,float x,float y,float z,float F)
+						           uint8_t mode,uint8_t ignore,float x,float y,float z,float F, float bomb_drop)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN];
@@ -114,6 +117,7 @@ static inline uint16_t mavlink_msg_offboard_control_pack_chan(uint8_t system_id,
 	packet.y = y;
 	packet.z = z;
 	packet.F = F;
+	packet.bomb_drop = bomb_drop;
 	packet.mode = mode;
 	packet.ignore = ignore;
 
@@ -138,7 +142,7 @@ static inline uint16_t mavlink_msg_offboard_control_pack_chan(uint8_t system_id,
  */
 static inline uint16_t mavlink_msg_offboard_control_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_offboard_control_t* offboard_control)
 {
-	return mavlink_msg_offboard_control_pack(system_id, component_id, msg, offboard_control->mode, offboard_control->ignore, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->F);
+	return mavlink_msg_offboard_control_pack(system_id, component_id, msg, offboard_control->mode, offboard_control->ignore, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->F, offboard_control->bomb_drop);
 }
 
 /**
@@ -152,7 +156,7 @@ static inline uint16_t mavlink_msg_offboard_control_encode(uint8_t system_id, ui
  */
 static inline uint16_t mavlink_msg_offboard_control_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_offboard_control_t* offboard_control)
 {
-	return mavlink_msg_offboard_control_pack_chan(system_id, component_id, chan, msg, offboard_control->mode, offboard_control->ignore, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->F);
+	return mavlink_msg_offboard_control_pack_chan(system_id, component_id, chan, msg, offboard_control->mode, offboard_control->ignore, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->F, offboard_control->bomb_drop);
 }
 
 /**
@@ -255,7 +259,7 @@ static inline void mavlink_msg_offboard_control_send_buf(mavlink_message_t *msgb
  */
 static inline uint8_t mavlink_msg_offboard_control_get_mode(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  16);
+	return _MAV_RETURN_uint8_t(msg,  20);
 }
 
 /**
@@ -265,7 +269,7 @@ static inline uint8_t mavlink_msg_offboard_control_get_mode(const mavlink_messag
  */
 static inline uint8_t mavlink_msg_offboard_control_get_ignore(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  17);
+	return _MAV_RETURN_uint8_t(msg,  21);
 }
 
 /**
@@ -306,6 +310,16 @@ static inline float mavlink_msg_offboard_control_get_z(const mavlink_message_t* 
 static inline float mavlink_msg_offboard_control_get_F(const mavlink_message_t* msg)
 {
 	return _MAV_RETURN_float(msg,  12);
+}
+
+/**
+ * @brief Get field F from offboard_control message
+ *
+ * @return F control channel, interpreted according to mode
+ */
+static inline float mavlink_msg_offboard_control_get_bomb_drop(const mavlink_message_t* msg)
+{
+	return _MAV_RETURN_float(msg,  16);
 }
 
 /**
