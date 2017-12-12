@@ -107,8 +107,9 @@ static inline uint16_t mavlink_msg_offboard_control_pack_chan(uint8_t system_id,
 	_mav_put_float(buf, 4, y);
 	_mav_put_float(buf, 8, z);
 	_mav_put_float(buf, 12, F);
-	_mav_put_uint8_t(buf, 16, mode);
-	_mav_put_uint8_t(buf, 17, ignore);
+	_mav_put_float(buf, 16, bomb_drop);
+	_mav_put_uint8_t(buf, 20, mode);
+	_mav_put_uint8_t(buf, 21, ignore);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN);
 #else
@@ -335,6 +336,7 @@ static inline void mavlink_msg_offboard_control_decode(const mavlink_message_t* 
 	offboard_control->y = mavlink_msg_offboard_control_get_y(msg);
 	offboard_control->z = mavlink_msg_offboard_control_get_z(msg);
 	offboard_control->F = mavlink_msg_offboard_control_get_F(msg);
+	offboard_control->bomb_drop = mavlink_msg_offboard_control_get_bomb_drop(msg);
 	offboard_control->mode = mavlink_msg_offboard_control_get_mode(msg);
 	offboard_control->ignore = mavlink_msg_offboard_control_get_ignore(msg);
 #else
